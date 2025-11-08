@@ -43,7 +43,7 @@ In Gilbert Strang’s MIT lecture on Singular Value Decomposition (SVD), every r
 \[
 A = U \Sigma V^T
 \]
-where \(U\) and \(V\) are orthogonal matrices, and \(\Sigma\) contains the singular values.
+where \(U\) and \(V\) are orthogonal matrices, that is their columns are orthonormal vectors and \(\Sigma\) contains the singular values.
 
 \begin{itemize}
     \item Columns of \(U\) are eigenvectors of \(AA^T\)
@@ -51,7 +51,7 @@ where \(U\) and \(V\) are orthogonal matrices, and \(\Sigma\) contains the singu
     \item Singular values \(\sigma_i = \sqrt{\lambda_i}\), where \(\lambda_i\) are eigenvalues of \(A^T A\) or \(AA^T\)
 \end{itemize}
 
-This decomposition reveals the geometry of linear transformations. Large singular values correspond to directions of maximum stretch. In image compression, using the top \(k\) singular values preserves the most important information while discarding small details.
+This decomposition reveals the geometry of linear transformations. Large singular values are responsible for maximum stretch. In image compression, using the top \(k\) singular values preserves the most important information while discarding small details.
 
 
 \vspace{1.5em}
@@ -180,7 +180,7 @@ k & Frobenius Norm \(\|A - A_k\|_F\) \\ \hline
 
 \begin{itemize}
     \item Smaller \(k\): high compression, less quality
-    \item Larger \(k\): better quality, more memory and computation
+    \item Larger \(k\): less compression, more quality
     \item Power Iteration: efficient, avoids full SVD computation
     \item Normalization and deflation critical for numerical stability
 \end{itemize}

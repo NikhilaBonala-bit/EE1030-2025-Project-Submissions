@@ -47,9 +47,6 @@ void free_mat(double **A, int r){
     free(A);
 }
 
-#define max 1000
-#define tol 1e-6
-
 double *power_iter(double **M, int n){
     double *X = malloc(n * sizeof(double));
     double *NX = malloc(n * sizeof(double));
@@ -57,7 +54,7 @@ double *power_iter(double **M, int n){
 
     for(int i=0; i<n; i++) X[i] = 1.0/n;
 
-    for(int k=0; k<max; k++){
+    for(int k=0; k<1000; k++){
         for(int i=0; i<n; i++){
             NX[i] = 0.0;
             for(int j=0; j<n; j++) NX[i] += M[i][j] * X[j];
@@ -76,7 +73,7 @@ double *power_iter(double **M, int n){
             nl += temp * NX[i];
         }
 
-        if(fabs(nl - l) < tol) break;
+        if(fabs(nl - l) < 1e-6) break;
         l = nl;
         double *y = X; X = NX; NX = y;
     }
