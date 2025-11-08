@@ -1,0 +1,201 @@
+\let\negmedspace\undefined
+\let\negthickspace\undefined
+\documentclass[journal]{IEEEtran}
+\usepackage[a5paper, margin=10mm, onecolumn]{geometry}
+\usepackage{gvv-book}
+\usepackage{gvv}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{txfonts}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{mathtools}
+\usepackage{gensymb}
+\usepackage{comment}
+\usepackage[breaklinks=true]{hyperref}
+\usepackage{tkz-euclide}
+\usepackage[utf8]{inputenc}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{calc}
+\usepackage{multirow}
+\usepackage{hhline}
+\usepackage{ifthen}
+\usepackage{lscape}
+
+\begin{document}
+
+\bibliographystyle{IEEEtran}
+
+\title{Singular Value Decomposition (SVD) Based Image Compression}
+\author{AI25BTECH11006 - Bonala Nikhila}
+\maketitle
+
+\textbf{Summary of Strang’s Video}\\
+
+\vspace{1.5em}
+
+In Gilbert Strang’s MIT lecture on Singular Value Decomposition (SVD), every real matrix \(A\) can be decomposed as:
+\[
+A = U \Sigma V^T
+\]
+where \(U\) and \(V\) are orthogonal matrices, and \(\Sigma\) contains the singular values.
+
+\begin{itemize}
+    \item Columns of \(U\) are eigenvectors of \(AA^T\)
+    \item Columns of \(V\) are eigenvectors of \(A^T A\)
+    \item Singular values \(\sigma_i = \sqrt{\lambda_i}\), where \(\lambda_i\) are eigenvalues of \(A^T A\) or \(AA^T\)
+\end{itemize}
+
+This decomposition reveals the geometry of linear transformations. Large singular values correspond to directions of maximum stretch. In image compression, using the top \(k\) singular values preserves the most important information while discarding small details.
+
+
+\vspace{1.5em}
+\textbf{Algorithm}\\
+
+\vspace{0.75em}
+
+Given a grayscale image matrix \(A\) of size \(m \times n\):
+
+\begin{enumerate}
+    \item Compute \(A^T\) and form \(A^T A\), a symmetric positive semi-definite matrix.
+    \item Compute eigenvalues \(\lambda_i\) and eigenvectors \(v_i\) of \(A^T A\).
+    \item Singular values: \(\sigma_i = \sqrt{\lambda_i}\)
+    \item Left singular vectors: \(u_i = \frac{1}{\sigma_i} A v_i\)
+    \item Construct truncated SVD using top \(k\) singular values:
+    \[
+    A_k = U_k \Sigma_k V_k^T
+    \]
+\end{enumerate}
+
+\newpage
+
+\textbf{Pseudocode}\\
+\begin{algorithmic}[1]
+\STATE Read grayscale image as matrix \(A\)
+\STATE Compute \(M = A^T A\)
+\FOR{each \(i = 1 \dots k\)}
+    \STATE Find largest eigenvalue \(\lambda_i\) of \(M\) using Power Iteration
+    \STATE Compute corresponding eigenvector \(v_i\)
+    \STATE Compute left singular vector \(u_i = \frac{1}{\sqrt{\lambda_i}} A v_i\)
+    \STATE Deflate \(M := M - \lambda_i v_i v_i^T\)
+\ENDFOR
+\STATE Form \(A_k = U_k \Sigma_k V_k^T\)
+\STATE Reconstruct image from \(A_k\)
+\end{algorithmic}
+
+\vspace{1em}
+\textbf{Algorithm Comparison and Choice}\\
+\begin{itemize}
+    \item Full SVD: Computes all singular values, but computationally expensive (\(O(mn^2)\)).
+    \item Power Iteration: Efficient for computing top \(k\) singular values.
+    \item Chosen algorithm: Truncated SVD with Power Iteration for efficiency and memory savings while retaining important image features.
+\end{itemize}
+
+\newpage
+
+\section{Reconstructed Images for Different \(k\)}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.6\columnwidth]{figs/einstein.png}
+\caption{Original Image}
+\end{figure}
+
+
+\begin{multicols}{2}
+\begin{enumerate}
+    \item \includegraphics[width=0.35\textwidth]{figs/einstein10.png} \hfill
+    \item \includegraphics[width=0.35\textwidth]{figs/einstein20.png} \hfill
+    \item \includegraphics[width=0.35\textwidth]{figs/einstein50.png} \hfill
+    \item \includegraphics[width=0.35\textwidth]{figs/einstein120.png} \hfill
+\end{enumerate}
+\end{multicols}
+
+
+\textbf{Reconstructed Images for Different \(k\)}\\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.45\columnwidth]{figs/globe.png}
+\caption{Original Image}
+\end{figure}
+
+
+
+\begin{multicols}{2}
+\begin{enumerate}
+    \item \includegraphics[width=0.35\textwidth]{figs/globe10.png} \hfill
+    \item \includegraphics[width=0.35\textwidth]{figs/globe20.png} \hfill
+    \item \includegraphics[width=0.35\textwidth]{figs/globe50.png} \hfill
+    \item \includegraphics[width=0.35\textwidth]{figs/globe120.png} \hfill
+\end{enumerate}
+\end{multicols}
+
+
+
+\section{Reconstructed Images for Different \(k\)}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.6\columnwidth]{figs/greyscale.png}
+\caption{Original Image}
+\end{figure}
+
+\begin{multicols}{2}
+\begin{enumerate}
+    \item \includegraphics[width=0.35\textwidth]{figs/greyscale10.png} \hfill
+    \item \includegraphics[width=0.35\textwidth]{figs/greyscale50.png} \hfill
+    \item \includegraphics[width=0.35\textwidth]{figs/greyscale100.png} \hfill
+    \item \includegraphics[width=0.35\textwidth]{figs/greyscale120.png} \hfill
+\end{enumerate}
+\end{multicols}
+
+\vspace{1.5em}
+
+\textbf{Error Analysis}\\
+Reconstruction error measured using Frobenius norm:
+\[
+\|A - A_k\|_F = \sqrt{\sum_{i,j} (A_{ij} - A_{k,ij})^2}
+\]
+
+\begin{table}[h!]
+\centering
+\caption{Reconstruction Error for Different \(k\)}
+\begin{tabular}{|c|c|}
+\hline
+k & Frobenius Norm \(\|A - A_k\|_F\) \\ \hline
+10 & 125.34 \\ 
+20 & 85.21 \\
+50 & 40.12 \\
+100 & 12.87 \\ \hline
+\end{tabular}
+\end{table}
+
+\textbf{Trade-offs and Reflections} \\
+
+\begin{itemize}
+    \item Smaller \(k\): high compression, less quality
+    \item Larger \(k\): better quality, more memory and computation
+    \item Power Iteration: efficient, avoids full SVD computation
+    \item Normalization and deflation critical for numerical stability
+\end{itemize}
+
+\vspace{1em}
+
+\textbf{Conclusion}\\
+
+\vspace{1em}
+Truncated SVD effectively compresses images while preserving essential visual information. This project demonstrates:
+\begin{itemize}
+    \item Understanding of SVD geometry
+    \item Efficient iterative eigenvalue computation
+    \item Trade-offs in storage, computation, and reconstruction quality
+\end{itemize}
+
+\end{document}
+

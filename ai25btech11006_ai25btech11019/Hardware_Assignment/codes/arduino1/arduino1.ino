@@ -11,11 +11,11 @@ const float b = -891.831915;
 const float c = 1236.576660;
 
 // ADC reference and resolution
-const float ADC_REF = 5.0;    // change to 3.3 if you use 3.3V reference
-const int ADC_RES = 1023;     // 10-bit ADC for Uno
+const float ADC_REF = 5.0;    
+const int ADC_RES = 1023;     
 
 void setup() {
-  lcd.begin(16, 2);          // initialize the LCD
+  lcd.begin(16, 2);
   Serial.begin(9600);
   lcd.print("PT100 Quadratic");
   delay(1500);
@@ -24,26 +24,20 @@ void setup() {
 
 void loop() {
   int adcValue = analogRead(analogPin);
-  // Convert ADC reading to measured voltage at A0
-  float voltage = (adcValue * ADC_REF) / ADC_RES -0.1;
-
-  // Compute temperature using quadratic
-  // T = a*V^2 + b*V + c
+  float voltage = (adcValue * ADC_REF) / ADC_RES;
   float temperature = a * voltage * voltage + b * voltage + c;
 
-  // Display on LCD
   lcd.setCursor(0, 0);
   lcd.print("V=");
-  lcd.print(voltage, 3);      // 3 decimal places
-  lcd.print(" V   ");         // pad to clear leftover chars
+  lcd.print(voltage, 3);
+  lcd.print(" V   ");
 
   lcd.setCursor(0, 1);
   lcd.print("T=");
-  lcd.print(temperature, 1);  // 1 decimal place
-  lcd.print((char)223);       // degree symbol
-  lcd.print("C   ");          // pad
+  lcd.print(temperature, 1);
+  lcd.print((char)223);
+  lcd.print("C   ");
 
-  // Serial output for logging
   Serial.print("ADC=");
   Serial.print(adcValue);
   Serial.print("  V=");
@@ -52,5 +46,9 @@ void loop() {
   Serial.print(temperature, 3);
   Serial.println(" C");
 
-  delay(1000); // update every 1 second
+  // call helper function from second file
+  displayVoltageAverage();
+
+  delay(1000);
 }
+
